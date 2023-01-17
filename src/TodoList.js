@@ -3,11 +3,13 @@ import TodoItem from './TodoItem';
 
 function TodoList({ todos, setTodos }) {
   const [newTodo, setNewTodo] = useState('');
+  const [priority, setPriority] = useState("");
 
   const handleSubmit = e => {
     e.preventDefault();
-    setTodos([...todos, newTodo]);
+    setTodos([...todos, {task: newTodo, priority: priority}]);
     setNewTodo('');
+    setPriority('');
   };
 
   const handleDelete = index => {
@@ -24,6 +26,12 @@ function TodoList({ todos, setTodos }) {
           value={newTodo}
           onChange={e => setNewTodo(e.target.value)}
         />
+        <select value={priority} onChange={e => setPriority(e.target.value)}>
+          <option value="">Select Priority</option>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
         <button type="submit">Add Todo</button>
       </form>
       {todos.map((todo, index) => (
@@ -32,6 +40,7 @@ function TodoList({ todos, setTodos }) {
           todo={todo}
           index={index}
           handleDelete={handleDelete}
+          priority={todo.priority}
         />
       ))}
     </div>

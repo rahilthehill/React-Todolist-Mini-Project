@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import TodoItem from './TodoItem';
-import './style.css';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 function TodoList({ todos, setTodos }) {
   const [newTodo, setNewTodo] = useState('');
   const [priority, setPriority] = useState("");
+  const [selectedDate, setSelectedDate] = useState(null);
 
   const handleSubmit = e => {
     e.preventDefault();
-    setTodos([...todos, {task: newTodo, priority: priority}]);
+    setTodos([...todos, {task: newTodo, priority: priority, date: selectedDate}]);
     setNewTodo('');
     setPriority('');
+    setSelectedDate(null);
   };
 
   const handleDelete = index => {
@@ -26,6 +29,12 @@ function TodoList({ todos, setTodos }) {
           type="text"
           value={newTodo}
           onChange={e => setNewTodo(e.target.value)}
+          className="todo-input"
+        />
+        <DatePicker
+          selected={selectedDate}
+          onChange={date => setSelectedDate(date)}
+          placeholderText="Select a due date"
         />
         <select value={priority} onChange={e => setPriority(e.target.value)}>
           <option value="">Select Priority</option>
@@ -36,14 +45,22 @@ function TodoList({ todos, setTodos }) {
         <button type="submit">Add Todo</button>
       </form>
       {todos.map((todo, index) => (
-        <TodoItem
-          key={index}
-          todo={todo}
-          index={index}
-          handleDelete={handleDelete}
-          priority={todo.priority}
-        />
-      ))}
+    <div key={index} className="todo-task">
+      <span className="todo-text">{todo.task}</span>
+      <DatePicker
+        selected={todo.date}
+        onChange={date => setSelectedDate(date)}
+        placeholderText="Select a due date"
+      />
+      <select value={todo.priority} onChange={e => setPriority(e.target.value)}>
+        <option value="">Select Priority</option>
+        <option value="high">High</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option>
+      </select>
+    </div>
+  ))}
+
     </div>
   );
 }
